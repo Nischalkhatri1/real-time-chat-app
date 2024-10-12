@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Real-Time Chat App</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="chat-container">
+        <div id="chat-box">
+            <ul id="messages"></ul>
+        </div>
+        <form id="chat-form">
+            <input id="username" placeholder="Enter your name" required />
+            <input id="message" autocomplete="off" placeholder="Type a message..." required />
+            <button type="submit">Send</button>
+        </form>
+    </div>
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+        const socket = io();
+
+        const form = document.getElementById('chat-form');
+        const messageInput = document.getElementById('message');
+        const usernameInput = document.getElementById('username');
+        const messages = document.getElementById('messages');
+
+        form.addEventListener('submit', function(e) {
+            e.preventDefault();
+            const username = usernameInput.value;
+            const message = messageInput.value;
+            if (message) {
+                socket.emit('chat message', { username, message });
+                messageInput.value = '';
+            }
+        });
+
+        socket.on('chat message', function({ username, message, timestamp }) {
+            const item = document.createElement('li');
+            item.className = username === usernameInput.value ? 'sent' : 'received';
+            item.innerHTML = `<span class="username">${username}</span>: <span class="message">${message}</span>`;
+            messages.appendChild(item);
+            window.scrollTo(0, document.body.scrollHeight);
+        });
+    </script>
+</body>
+</html>
