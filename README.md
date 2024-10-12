@@ -31,3 +31,4 @@ A simple real-time chat application built with Node.js, Express, and Socket.IO. 
  
 ## your UI looks like 
    ![user interface](images/image.png)
+# real-time-chat-app
